@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "house_staples",
+  "project_id": "d608b2f5-ffe1-4476-955b-3c44b18a2aa2"
+}
