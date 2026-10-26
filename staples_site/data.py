@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
+from datetime import date
 from pathlib import Path
 
 import yaml
@@ -20,15 +21,24 @@ STORES_FILE = "stores.yaml"
 
 KEBAB_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 
-STORE_FIELDS = {"id", "name"}
+STORE_REQUIRED = {"id", "name"}
+STORE_FIELDS = STORE_REQUIRED | {"order_schedule"}
+SCHEDULE_FIELDS = {"every_weeks", "starting"}
 STAPLE_REQUIRED = {"id", "name", "category"}
 STAPLE_FIELDS = STAPLE_REQUIRED | {"aliases", "stores", "product", "unit"}
+
+
+@dataclass(frozen=True)
+class OrderSchedule:
+    every_weeks: int
+    starting: date  # any one order date; the others fall every_weeks apart
 
 
 @dataclass(frozen=True)
 class Store:
     id: str
     name: str
+    order_schedule: OrderSchedule | None = None
 
 
 @dataclass(frozen=True)
@@ -131,6 +141,35 @@ def _str_list(fname: str, label: str, entry: dict, key: str,
     return value
 
 
+def _order_schedule(label: str, value, problems: list[Problem]) -> OrderSchedule | None:
+    def problem(message: str) -> None:
+        problems.append(Problem(STORES_FILE, label, f"order_schedule: {message}"))
+
+    if value is None:
+        return None
+    if not isinstance(value, dict):
+        problem("must be a mapping with 'every_weeks' and 'starting'")
+        return None
+    for key in sorted(set(value) - SCHEDULE_FIELDS):
+        problem(f"unknown field '{key}'")
+    every = value.get("every_weeks")
+    if isinstance(every, bool) or not isinstance(every, int) or every < 1:
+        problem("'every_weeks' must be a whole number of at least 1")
+        every = None
+    starting = value.get("starting")
+    if isinstance(starting, str):
+        try:
+            starting = date.fromisoformat(starting)
+        except ValueError:
+            starting = None
+    if not isinstance(starting, date):
+        problem("'starting' must be a date like 2026-10-27")
+        starting = None
+    if every is None or starting is None:
+        return None
+    return OrderSchedule(every_weeks=every, starting=starting)
+
+
 def load_data(data_dir: Path = DEFAULT_DATA_DIR) -> HouseData:
     """Load and validate both data files. Raises ValidationError with every problem found."""
     data_dir = Path(data_dir)
@@ -141,8 +180,10 @@ def load_data(data_dir: Path = DEFAULT_DATA_DIR) -> HouseData:
 
     stores: list[Store] = []
     for i, entry in enumerate(raw_stores):
-        if _check_entry(STORES_FILE, i, entry, STORE_FIELDS, STORE_FIELDS, problems) is not None:
-            stores.append(Store(id=entry.get("id"), name=entry.get("name")))
+        label = _check_entry(STORES_FILE, i, entry, STORE_REQUIRED, STORE_FIELDS, problems)
+        if label is not None:
+            schedule = _order_schedule(label, entry.get("order_schedule"), problems)
+            stores.append(Store(id=entry.get("id"), name=entry.get("name"), order_schedule=schedule))
     _check_unique_ids(STORES_FILE, raw_stores, problems)
     store_ids = {s.id for s in stores}
 

@@ -18,7 +18,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from staples_site.data import DEFAULT_DATA_DIR, HouseData, ValidationError, load_data
+from staples_site.data import DEFAULT_DATA_DIR, HouseData, Store, ValidationError, load_data
 
 SITE_DIR = Path(__file__).resolve().parent / "site"
 TEMPLATE = "index.html"
@@ -33,12 +33,20 @@ def build_time() -> datetime:
     return datetime.now(timezone.utc).replace(microsecond=0)
 
 
+def order_schedule(store: Store) -> dict | None:
+    sched = store.order_schedule
+    if sched is None:
+        return None
+    return {"every_weeks": sched.every_weeks, "starting": sched.starting.isoformat()}
+
+
 def site_data(data: HouseData, built_at: datetime) -> dict:
     """The JSON payload: staples joined with store names, in preference order."""
     stores = data.stores_by_id
     return {
         "built_at": built_at.isoformat().replace("+00:00", "Z"),
-        "stores": [{"id": s.id, "name": s.name} for s in data.stores],
+        "stores": [{"id": s.id, "name": s.name, "order_schedule": order_schedule(s)}
+                   for s in data.stores],
         "categories": sorted({s.category for s in data.staples}),
         "staples": [
             {

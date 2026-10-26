@@ -72,6 +72,25 @@ stores that exist in this file.
   name: Trader Joe's
 ```
 
+### Order schedule
+
+The site shows the next order date for each store with an `order_schedule`.
+We order on Tuesdays, alternating between Costco and Restaurant Depot, so each
+store orders every 2 weeks. `starting` is any one order date for that store;
+the others fall `every_weeks` apart, before and after it. A store without an
+`order_schedule` is simply left out of "Next orders".
+
+```yaml
+- id: costco
+  name: Costco
+  order_schedule:
+    every_weeks: 2
+    starting: 2026-11-03
+```
+
+The date is worked out in the browser, so it stays current between rebuilds.
+To skip or move an order, change `starting` to the new date.
+
 ### Running locally
 
 Requires [uv](https://docs.astral.sh/uv/).

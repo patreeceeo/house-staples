@@ -1,7 +1,15 @@
 # Stores we order from on Instacart. Staples refer to these by id.
+# order_schedule: we order every `every_weeks` weeks, counting from the
+# `starting` order date. We alternate Tuesdays between these two stores.
 
 - id: costco
   name: Costco
+  order_schedule:
+    every_weeks: 2
+    starting: 2026-11-03
 
 - id: restaurant-depot
   name: Restaurant Depot
+  order_schedule:
+    every_weeks: 2
+    starting: 2026-10-27

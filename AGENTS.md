@@ -60,7 +60,7 @@ uv run python -m staples_site.build --out dist  # build static site into dist/ (
 
 ## Architecture Overview
 
-- `data/staples.yaml`, `data/stores.yaml` — source of truth; staples reference stores by id, in preference order.
+- `data/staples.yaml`, `data/stores.yaml` — source of truth; staples reference stores by id, in preference order; stores may have an `order_schedule` (every_weeks, starting) that app.js turns into next order dates.
 - `staples_site/` — Python package: `data.py` loader + validation (`load_data(data_dir) -> HouseData`), `validate.py` CLI, `build.py` renders the static site into `dist/` (index.html with the data embedded so it works from file://, style.css, app.js, staples.json).
 - `staples_site/site/` — site source assets: `index.html` template (`{{placeholders}}`), `style.css`, `app.js` (dependency-free vanilla JS; search scoring is mirrored in `tests/test_search.py` — keep them in step). Relative URLs only (served from a GitHub Pages project subpath).
 - `tests/` — pytest suite.

@@ -82,6 +82,39 @@
     return Math.max(best, 85 * total / tokens.length);
   }
 
+  // ---- Order schedule ------------------------------------------------------
+
+  var DAY_MS = 864e5;
+
+  // "2026-10-27" -> days since the epoch (UTC, so no time-zone drift).
+  function dayNumber(iso) {
+    var p = iso.split("-").map(Number);
+    return Date.UTC(p[0], p[1] - 1, p[2]) / DAY_MS;
+  }
+
+  function todayNumber() {
+    var now = new Date();
+    return Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / DAY_MS;
+  }
+
+  // First order day on or after `today` for a {every_weeks, starting} schedule.
+  function nextOrderDay(schedule, today) {
+    var start = dayNumber(schedule.starting);
+    var period = schedule.every_weeks * 7;
+    if (today <= start) return start;
+    return start + Math.ceil((today - start) / period) * period;
+  }
+
+  function formatDay(day) {
+    return new Date(day * DAY_MS).toLocaleDateString(undefined,
+      { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
+  }
+
+  function relativeDay(day, today) {
+    var n = day - today;
+    return n === 0 ? "today" : n === 1 ? "tomorrow" : "in " + n + " days";
+  }
+
   // ---- Page ----------------------------------------------------------------
 
   var data = JSON.parse(document.getElementById("staples-data").textContent);
@@ -114,6 +147,28 @@
     .concat([{ value: "-none", label: "No store set yet" }]));
   addOptions(els.category, data.categories.map(function (c) { return { value: c, label: c }; }));
 
+  var today = todayNumber();
+  var nextOrders = data.stores
+    .filter(function (s) { return s.order_schedule; })
+    .map(function (s) { return { store: s, day: nextOrderDay(s.order_schedule, today) }; })
+    .sort(function (a, b) { return a.day - b.day || a.store.name.localeCompare(b.store.name); });
+  var nextOrderByStore = {};
+  nextOrders.forEach(function (o) { nextOrderByStore[o.store.id] = o.day; });
+
+  function renderNextOrders() {
+    if (!nextOrders.length) return;
+    var list = document.getElementById("next-orders-list");
+    nextOrders.forEach(function (o, i) {
+      var li = el("li", i === 0 ? "next-order soonest" : "next-order");
+      li.appendChild(el("span", "next-order-store", o.store.name));
+      var when = el("span", "next-order-date", formatDay(o.day) + " ");
+      when.appendChild(el("span", "next-order-when", "· " + relativeDay(o.day, today)));
+      li.appendChild(when);
+      list.appendChild(li);
+    });
+    document.getElementById("next-orders").hidden = false;
+  }
+
   function renderItem(s) {
     var li = el("li", "item");
     var head = el("div", "item-head");
@@ -127,7 +182,9 @@
       ul.setAttribute("aria-label", "Stores, usual first");
       s.stores.forEach(function (st, i) {
         var chip = el("li", i === 0 ? "chip usual" : "chip", st.name);
-        if (i === 0) chip.title = "Usual store";
+        var title = i === 0 ? ["Usual store"] : [];
+        if (st.id in nextOrderByStore) title.push("next order " + formatDay(nextOrderByStore[st.id]));
+        if (title.length) chip.title = title.join(", ");
         ul.appendChild(chip);
       });
       li.appendChild(ul);
@@ -185,5 +242,6 @@
   [els.q, els.store, els.category, els.sort].forEach(function (e) {
     e.addEventListener(e === els.q ? "input" : "change", update);
   });
+  renderNextOrders();
   update();
 })();

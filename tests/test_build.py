@@ -50,6 +50,15 @@ def test_stores_joined_in_preference_order(tmp_path, monkeypatch):
     assert oil["product"] == "Kirkland Organic EVOO"
 
 
+def test_order_schedules_in_payload(site):
+    payload = json.loads((site / "staples.json").read_text())
+    schedules = {s["id"]: s["order_schedule"] for s in payload["stores"]}
+    assert schedules == {
+        "costco": {"every_weeks": 2, "starting": "2026-11-03"},
+        "restaurant-depot": {"every_weeks": 2, "starting": "2026-10-27"},
+    }
+
+
 def test_index_embeds_same_data(site):
     html = (site / "index.html").read_text()
     assert embedded(html) == json.loads((site / "staples.json").read_text())

@@ -1,8 +1,10 @@
+from datetime import date
 from pathlib import Path
 
 import pytest
 
-from staples_site.data import DEFAULT_DATA_DIR, HouseData, Staple, Store, ValidationError, load_data
+from staples_site.data import (DEFAULT_DATA_DIR, HouseData, OrderSchedule, Staple, Store,
+                               ValidationError, load_data)
 from staples_site.validate import main
 
 STORES = """\
@@ -92,10 +94,32 @@ def test_staple_problems(tmp_path, staples, expected):
     ("- {id: costco}\n", "stores.yaml [costco]: missing required field 'name'"),
     ("- {id: Costco, name: Costco}\n", "id 'Costco' is not kebab-case"),
     ("- {id: costco, name: A}\n- {id: costco, name: B}\n", "stores.yaml [costco]: duplicate id"),
+    ("- {id: costco, name: Costco, order_schedule: weekly}\n",
+     "stores.yaml [costco]: order_schedule: must be a mapping"),
+    ("- {id: costco, name: Costco, order_schedule: {every_weeks: 0, starting: 2026-10-27}}\n",
+     "'every_weeks' must be a whole number of at least 1"),
+    ("- {id: costco, name: Costco, order_schedule: {every_weeks: 2}}\n",
+     "'starting' must be a date like 2026-10-27"),
+    ("- {id: costco, name: Costco, order_schedule: {every_weeks: 2, starting: 'next tuesday'}}\n",
+     "'starting' must be a date like 2026-10-27"),
+    ("- {id: costco, name: Costco, order_schedule: {every_weeks: 2, starting: 2026-10-27, day: tue}}\n",
+     "order_schedule: unknown field 'day'"),
 ])
 def test_store_problems(tmp_path, stores, expected):
     problems = problems_for(tmp_path, staples="[]\n", stores=stores)
     assert any(expected in p for p in problems), problems
+
+
+def test_order_schedule(tmp_path):
+    stores = ("- {id: costco, name: Costco, order_schedule: {every_weeks: 2, starting: 2026-11-03}}\n"
+              "- {id: restaurant-depot, name: Restaurant Depot,"
+              " order_schedule: {every_weeks: 2, starting: '2026-10-27'}}\n"
+              "- {id: aldi, name: Aldi}\n")
+    data = load_data(write(tmp_path, staples="[]\n", stores=stores))
+    by_id = data.stores_by_id
+    assert by_id["costco"].order_schedule == OrderSchedule(2, date(2026, 11, 3))
+    assert by_id["restaurant-depot"].order_schedule == OrderSchedule(2, date(2026, 10, 27))
+    assert by_id["aldi"].order_schedule is None
 
 
 def test_missing_file(tmp_path):
