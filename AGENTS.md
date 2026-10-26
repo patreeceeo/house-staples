@@ -47,6 +47,32 @@ cp -rf source dest          # NOT: cp -r source dest
 - `apt-get` - use `-y` flag
 - `brew` - use `HOMEBREW_NO_AUTO_UPDATE=1` env var
 
+## Build & Test
+
+Python via [uv](https://docs.astral.sh/uv/) (no Node). Runtime dep: PyYAML; dev dep: pytest.
+
+```bash
+uv sync                                     # create .venv, install deps (incl. dev group)
+uv run pytest                               # run tests
+uv run python -m staples_site.validate      # validate data/*.yaml (counts on success; lists all problems + exit 1 on failure)
+uv run python -m staples_site.build --out dist  # build static site into dist/ (SOURCE_DATE_EPOCH pins the timestamp)
+```
+
+## Architecture Overview
+
+- `data/staples.yaml`, `data/stores.yaml` — source of truth; staples reference stores by id, in preference order.
+- `staples_site/` — Python package: `data.py` loader + validation (`load_data(data_dir) -> HouseData`), `validate.py` CLI, `build.py` renders the static site into `dist/` (index.html with the data embedded so it works from file://, style.css, app.js, staples.json).
+- `staples_site/site/` — site source assets: `index.html` template (`{{placeholders}}`), `style.css`, `app.js` (dependency-free vanilla JS; search scoring is mirrored in `tests/test_search.py` — keep them in step). Relative URLs only (served from a GitHub Pages project subpath).
+- `tests/` — pytest suite.
+- `.github/workflows/pages.yml` — CI/deploy: `uv sync --locked`, validate, pytest, build `dist/`, then deploy to GitHub Pages.
+- `dist/` — build output, git-ignored.
+
+## Deploy
+
+- The Pages workflow runs on push to `main`, weekly (cron `0 13 * * 1` = Monday 13:00 UTC, ~6am Pacific), and on manual dispatch (Actions tab → Run workflow).
+- Its steps mirror the Build & Test commands above; keep the two in step.
+- One-time repo setting (not done by the workflow): **Settings → Pages → Source: GitHub Actions**.
+
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:1105d646 -->
 ## Beads Issue Tracker
 

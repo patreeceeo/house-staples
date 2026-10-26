@@ -1,0 +1,7 @@
+# Stores we order from on Instacart. Staples refer to these by id.
+
+- id: costco
+  name: Costco
+
+- id: restaurant-depot
+  name: Restaurant Depot

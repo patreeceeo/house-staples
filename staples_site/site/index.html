@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>House Staples</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <h1>House Staples</h1>
+      <p class="tagline">What we keep stocked, and where we usually order it.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <form class="controls" role="search" onsubmit="return false">
+      <label class="search">
+        <span class="visually-hidden">Search staples</span>
+        <input id="q" type="search" placeholder="Search staples…" autocomplete="off"
+               autocapitalize="none" spellcheck="false" autofocus>
+      </label>
+      <div class="filters">
+        <label>
+          <span>Store</span>
+          <select id="store-filter">
+            <option value="">All stores</option>
+          </select>
+        </label>
+        <label>
+          <span>Category</span>
+          <select id="category-filter">
+            <option value="">All categories</option>
+          </select>
+        </label>
+        <label>
+          <span>Sort</span>
+          <select id="sort">
+            <option value="category">By category</option>
+            <option value="name">By name</option>
+          </select>
+        </label>
+      </div>
+    </form>
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+    <div id="results"></div>
+    <noscript><p class="status">Search needs JavaScript. The raw list is in <a href="staples.json">staples.json</a>.</p></noscript>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Last rebuilt <time datetime="{{built_at}}">{{built_date}}</time> · {{staple_count}} staples</p>
+    </div>
+  </footer>
+
+  <script id="staples-data" type="application/json">{{data_json}}</script>
+  <script src="app.js"></script>
+</body>
+</html>

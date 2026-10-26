@@ -1,0 +1,51 @@
+name: Propose a staple change
+description: Propose adding, removing, or changing the stores for a house staple. The house votes on it.
+title: "[Staple] "
+labels: ["staple-proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing a change to the house staples list.
+
+        **How the vote works**
+        - Voting stays open for **7 days or until the next house meeting**, whichever comes first.
+        - Vote by reacting to this issue: :+1: for yes, :-1: for no.
+        - The proposal passes with a **simple majority of those who vote**, as long as **at least half the house votes**.
+        - If it passes, the orderer updates `data/staples.yaml` and closes this issue.
+  - type: dropdown
+    id: change-type
+    attributes:
+      label: Change type
+      description: What kind of change are you proposing?
+      options:
+        - Add a staple
+        - Remove a staple
+        - Change preferred stores
+    validations:
+      required: true
+  - type: input
+    id: staple-name
+    attributes:
+      label: Staple name
+      description: The item, as it appears (or should appear) on the list.
+      placeholder: e.g. Oat milk
+    validations:
+      required: true
+  - type: textarea
+    id: preferred-stores
+    attributes:
+      label: Preferred stores, in order
+      description: One store per line, most preferred first. Use the store names shown on the site. Leave blank when removing a staple.
+      placeholder: |
+        First choice
+        Second choice
+    validations:
+      required: false
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reason
+      description: Why should the house make this change? Include product, brand, or unit details if they matter.
+    validations:
+      required: true

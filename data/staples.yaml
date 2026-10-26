@@ -1,0 +1,283 @@
+# House staples, decided by house vote.
+# stores: store ids from stores.yaml, in order of preference; the first is where we usually order it.
+
+- id: all-purpose-flour
+  name: All Purpose Flour
+  category: Baking
+  stores: [restaurant-depot, costco]
+
+- id: baguettes
+  name: Baguettes
+  category: Bakery & Tortillas
+  stores: [costco]
+
+- id: balsamic-vinegar
+  name: Balsamic Vinegar
+  category: Condiments & Spreads
+  stores: []
+
+- id: bananas
+  name: Bananas
+  category: Produce
+  stores: [costco, restaurant-depot]
+
+- id: black-beans
+  name: Black Beans
+  category: Canned & Jarred
+  stores: [costco]
+
+- id: black-peppercorns
+  name: Black Peppercorns
+  category: Spices & Seasonings
+  stores: [costco]
+
+- id: broccoli
+  name: Broccoli
+  category: Produce
+  stores: [restaurant-depot]
+
+- id: brown-sugar
+  name: Brown Sugar
+  category: Baking
+  stores: [costco]
+
+- id: chickpeas
+  name: Chickpeas
+  category: Canned & Jarred
+  stores: [costco]
+
+- id: chocolate-chips
+  name: Chocolate Chips
+  category: Baking
+  stores: [costco]
+
+- id: cinnamon
+  name: Cinnamon
+  category: Spices & Seasonings
+  stores: [costco]
+
+- id: coconut-milk
+  name: Coconut Milk
+  category: Canned & Jarred
+  stores: [costco]
+
+- id: corn-grits
+  name: Corn Grits
+  category: Grains, Pasta & Beans
+  stores: [restaurant-depot]
+
+- id: corn-tortillas
+  name: Corn Tortillas
+  category: Bakery & Tortillas
+  stores: [costco]
+
+- id: cucumbers
+  name: Cucumbers
+  category: Produce
+  stores: [restaurant-depot]
+
+- id: cumin
+  name: Cumin
+  category: Spices & Seasonings
+  stores: [restaurant-depot]
+
+- id: diced-tomatoes
+  name: Diced Tomatoes
+  category: Canned & Jarred
+  stores: [costco]
+
+- id: dried-chickpeas
+  name: Dried Chickpeas
+  category: Grains, Pasta & Beans
+  stores: [restaurant-depot]
+
+- id: eggs
+  name: Eggs
+  category: Dairy & Eggs
+  stores: [costco]
+
+- id: flavored-sparkling-water
+  name: Flavored Sparkling Water
+  category: Beverages
+  stores: [costco]
+
+- id: flour-tortillas
+  name: Flour Tortillas
+  category: Bakery & Tortillas
+  stores: [costco]
+
+- id: frozen-mixed-berries
+  name: Frozen Mixed Berries
+  category: Frozen
+  stores: [costco]
+
+- id: granulated-garlic
+  name: Granulated Garlic
+  category: Spices & Seasonings
+  stores: [costco, restaurant-depot]
+
+- id: grape-tomatoes
+  name: Grape Tomatoes
+  category: Produce
+  stores: [restaurant-depot]
+
+- id: heavy-cream
+  name: Heavy Cream
+  category: Dairy & Eggs
+  stores: [costco]
+
+- id: honey
+  name: Honey
+  category: Condiments & Spreads
+  stores: [costco]
+
+- id: hot-sauce
+  name: Hot Sauce
+  category: Condiments & Spreads
+  stores: [costco]
+
+- id: hummus
+  name: Hummus
+  category: Refrigerated
+  stores: [costco, restaurant-depot]
+
+- id: kosher-salt
+  name: Kosher Salt
+  category: Spices & Seasonings
+  stores: [costco]
+
+- id: mayonnaise
+  name: Mayonnaise
+  category: Condiments & Spreads
+  stores: [costco]
+
+- id: mixed-nuts
+  name: Mixed Nuts
+  category: Nuts & Dried Fruit
+  stores: [costco]
+
+- id: oat-milk
+  name: Oat Milk
+  aliases: [Oatmilk]
+  category: Dairy & Eggs
+  stores: [costco]
+
+- id: oats
+  name: Oats
+  category: Grains, Pasta & Beans
+  stores: [restaurant-depot]
+
+- id: peanut-butter
+  name: Peanut Butter
+  category: Condiments & Spreads
+  stores: [costco]
+
+- id: pecorino-romano
+  name: Pecorino Romano
+  category: Dairy & Eggs
+  stores: [costco]
+
+- id: pesto
+  name: Pesto
+  category: Refrigerated
+  stores: [costco]
+
+- id: pickles
+  name: Pickles
+  category: Canned & Jarred
+  stores: [costco]
+
+- id: pitted-kalamata-olives
+  name: Pitted Kalamata Olives
+  category: Canned & Jarred
+  stores: [restaurant-depot]
+
+- id: plain-whole-milk-greek-yogurt
+  name: Plain Whole Milk Greek Yogurt
+  category: Dairy & Eggs
+  stores: [costco]
+
+- id: raisins
+  name: Raisins
+  category: Nuts & Dried Fruit
+  stores: [costco]
+
+- id: rice-noodles
+  name: Rice Noodles
+  category: Grains, Pasta & Beans
+  stores: [costco]
+
+- id: salted-butter
+  name: Salted Butter
+  category: Dairy & Eggs
+  stores: [costco]
+
+- id: shredded-cheese
+  name: Shredded Cheese
+  category: Dairy & Eggs
+  stores: [costco]
+
+- id: sliced-cheese
+  name: Sliced Cheese
+  category: Dairy & Eggs
+  stores: []
+
+- id: spinach
+  name: Spinach
+  category: Produce
+  stores: [restaurant-depot]
+
+- id: sugar
+  name: Sugar
+  category: Baking
+  stores: [costco]
+
+- id: tahini
+  name: Tahini
+  category: Condiments & Spreads
+  stores: []
+
+- id: tofu
+  name: Tofu
+  category: Refrigerated
+  stores: [costco]
+
+- id: tomato-paste
+  name: Tomato Paste
+  category: Canned & Jarred
+  stores: [costco]
+
+- id: tortilla-chips
+  name: Tortilla Chips
+  category: Snacks
+  stores: [costco]
+
+- id: unsalted-butter
+  name: Unsalted Butter
+  category: Dairy & Eggs
+  stores: [costco]
+
+- id: variety-pasta
+  name: Variety Pasta
+  category: Grains, Pasta & Beans
+  stores: [costco]
+
+- id: walnuts
+  name: Walnuts
+  category: Nuts & Dried Fruit
+  stores: [costco]
+
+- id: white-rice
+  name: White Rice
+  category: Grains, Pasta & Beans
+  stores: [costco]
+
+- id: whole-milk
+  name: Whole Milk
+  category: Dairy & Eggs
+  stores: [costco]
+
+- id: yellow-onions
+  name: Yellow Onions
+  category: Produce
+  stores: [restaurant-depot]
